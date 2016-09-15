@@ -1,11 +1,15 @@
 var models= require(require('path').resolve('./advaya')).models();
+
+var db= require('./db');
+var initialize= require('./initialize');
+
 var api= require('require-all')({
   dirname     :  __dirname+'/api',
   excludeDirs :  /^\.(git|svn)$/,
   recursive   : true
 });
 
-module.exports= Object.keys(models)
+var modelApi= Object.keys(models)
 .map(function (key) {
 	return models[key];
 })
@@ -22,3 +26,9 @@ module.exports= Object.keys(models)
 	modelObj[model.modelName]= model;
 	return modelObj;
 },{});
+
+module.exports ={
+	api: modelApi,
+	connect: connect,
+	initialize: initialize
+}
