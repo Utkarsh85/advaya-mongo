@@ -6,7 +6,7 @@ var findEmbeded= require('../core/findEmbeded');
 
 //Projection utility
 var projectionUtil= require('../utils/projectionUtil');
-var models= require('path').resolve('./advaya').models;
+var models= require(require('path').resolve('./advaya')).models();
 
 module.exports= function (model) {
 	model.populate= function (obj,fields) {

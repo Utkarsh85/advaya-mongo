@@ -1,4 +1,4 @@
-var validate= require('path').resolve('./advaya').validation;
+var validate= require(require('path').resolve('./advaya')).validation();
 var autoCreatedAt= require('../utils/autoCreatedAt');
 var autoUpdatedAt= require('../utils/autoUpdatedAt');
 

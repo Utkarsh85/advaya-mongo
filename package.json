@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Utkarsh85/advaya-mongo#readme",
   "dependencies": {
     "deepmerge": "^0.2.10",
-    "mongodb": "^2.2.10"
+    "mongodb": "^2.2.10",
+    "require-all": "^2.0.0"
   }
 }

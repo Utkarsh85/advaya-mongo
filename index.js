@@ -1,4 +1,4 @@
-var models= require('path').resolve('./advaya').models;
+var models= require(require('path').resolve('./advaya')).models();
 var api= require('require-all')({
   dirname     :  __dirname+'/api',
   excludeDirs :  /^\.(git|svn)$/,
