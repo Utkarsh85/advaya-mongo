@@ -1,0 +1,28 @@
+{
+  "name": "advaya-mongo",
+  "version": "0.0.0",
+  "description": "Advaya mongo plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Utkarsh85/advaya-mongo.git"
+  },
+  "keywords": [
+    "advaya",
+    "mongo",
+    "mongodb"
+  ],
+  "author": "Utkarsh85",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Utkarsh85/advaya-mongo/issues"
+  },
+  "homepage": "https://github.com/Utkarsh85/advaya-mongo#readme",
+  "dependencies": {
+    "deepmerge": "^0.2.10",
+    "mongodb": "^2.2.10"
+  }
+}
