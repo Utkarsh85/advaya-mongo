@@ -1,5 +1,3 @@
-var models= require(require('path').resolve('./advaya')).models();
-
 var db= require('./db');
 var initialize= require('./initialize');
 
@@ -9,26 +7,30 @@ var api= require('require-all')({
   recursive   : true
 });
 
-var modelApi= Object.keys(models)
-.map(function (key) {
-	return models[key];
-})
-.map(api.find)
-.map(api.findOne)
-.map(api.create)
-.map(api.updateMany)
-.map(api.update)
-.map(api.destroyMany)
-.map(api.destroy)
-.map(api.native)
-.map(api.populate)
-.reduce(function (modelObj,model) {
-	modelObj[model.modelName]= model;
-	return modelObj;
-},{});
 
-module.exports ={
-	api: modelApi,
-	connect: connect,
-	initialize: initialize
+module.exports = function (models,validation) {
+
+	var modelApi= Object.keys(models)
+	.map(function (key) {
+		return {model:models[key],validate:validation,allModels:models};
+	})
+	.map(api.find)
+	.map(api.findOne)
+	.map(api.create)
+	.map(api.updateMany)
+	.map(api.update)
+	.map(api.destroyMany)
+	.map(api.destroy)
+	.map(api.native)
+	.map(api.populate)
+	.reduce(function (modelObj,obj) {
+		modelObj[obj.model.modelName]= obj.model;
+		return modelObj;
+	},{});
+
+	return {
+		api: modelApi,
+		connect: db.connect,
+		initialize: initialize
+	}
 }

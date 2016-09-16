@@ -1,4 +1,3 @@
-var validate= require(require('path').resolve('./advaya')).validation();
 var autoUpdatedAt= require('../utils/autoUpdatedAt');
 
 //dbCore
@@ -7,13 +6,14 @@ var updateEmbeded= require('../core/updateEmbeded');
 //Projection utility
 var projectionUtil= require('../utils/projectionUtil');
 
-module.exports= function (model) {
+module.exports= function (input) {
+	var model= input.model;
 	model.updateMany= function (selector,obj) {
 		delete obj._id;
 
 		if(!model.schema.hasOwnProperty('embeded'))
 		{
-			return validate(model.schema,obj)
+			return input.validate(model.schema,obj)
 			.then(autoUpdatedAt(model))
 			.then(function (obj) {
 				return update(model.modelName,selector,obj,projectionUtil(model,{}));
@@ -21,7 +21,7 @@ module.exports= function (model) {
 		}
 		else
 		{
-			return validate(model.schema,obj)
+			return input.validate(model.schema,obj)
 			.then(autoUpdatedAt(model))
 			.then(function (obj) {
 				return updateEmbeded(model.modelName,selector,obj,model.schema.embeded,projectionUtil(model,{}));
@@ -29,5 +29,5 @@ module.exports= function (model) {
 		}
 	};
 
-	return model;
+	return input;
 }

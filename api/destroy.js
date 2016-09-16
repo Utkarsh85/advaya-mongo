@@ -1,13 +1,12 @@
-var validate= require(require('path').resolve('./advaya')).validation();
-
 //dbCore
 var destroyOne= require('../core/destroyOne');
 var destroyOneEmbeded= require('../core/destroyOneEmbeded');
 //Projection utility
 var projectionUtil= require('../utils/projectionUtil');
 
-module.exports= function (model) {
-	model.destroy= function (selector) {
+module.exports= function (input) {
+	var model= input.model;
+	input.model.destroy= function (selector) {
 
 		if(!model.schema.hasOwnProperty('embeded'))
 		{
@@ -21,5 +20,5 @@ module.exports= function (model) {
 		}
 	};
 
-	return model;
+	return input;
 }

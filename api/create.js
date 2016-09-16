@@ -1,4 +1,3 @@
-var validate= require(require('path').resolve('./advaya')).validation();
 var autoCreatedAt= require('../utils/autoCreatedAt');
 var autoUpdatedAt= require('../utils/autoUpdatedAt');
 
@@ -8,8 +7,9 @@ var createEmbeded= require('../core/createEmbeded');
 var createOne= require('../core/createOne');
 var createOneEmbeded= require('../core/createOneEmbeded');
 
-module.exports= function (model) {
-	model.create= function (obj,embedParentId) {
+module.exports= function (input) {
+	var model= input.model;
+	input.model.create= function (obj,embedParentId) {
 
 		//if obj is an array of length greater than one, then treat it with create and createEmbeded
 		if(Array.isArray(obj) )//&& obj.length>1)
@@ -22,7 +22,7 @@ module.exports= function (model) {
 
 			if(!model.schema.hasOwnProperty('embeded'))
 			{
-				return validate(model.schema,obj)
+				return input.validate(model.schema,obj)
 				.then(autoCreatedAt(model))
 				.then(autoUpdatedAt(model))
 				.then(function (obj) {
@@ -31,7 +31,7 @@ module.exports= function (model) {
 			}
 			else
 			{
-				return validate(model.schema,obj)
+				return input.validate(model.schema,obj)
 				.then(autoCreatedAt(model))
 				.then(autoUpdatedAt(model))
 				.then(function (obj) {
@@ -50,7 +50,7 @@ module.exports= function (model) {
 
 			if(!model.schema.hasOwnProperty('embeded'))
 			{
-				return validate(model.schema,obj)
+				return input.validate(model.schema,obj)
 				.then(autoCreatedAt(model))
 				.then(autoUpdatedAt(model))
 				.then(function (obj) {
@@ -59,7 +59,7 @@ module.exports= function (model) {
 			}
 			else
 			{
-				return validate(model.schema,obj)
+				return input.validate(model.schema,obj)
 				.then(autoCreatedAt(model))
 				.then(autoUpdatedAt(model))
 				.then(function (obj) {
@@ -70,5 +70,5 @@ module.exports= function (model) {
 			
 	};
 
-	return model;
+	return input;
 }

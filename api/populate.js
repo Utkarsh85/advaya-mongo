@@ -6,10 +6,11 @@ var findEmbeded= require('../core/findEmbeded');
 
 //Projection utility
 var projectionUtil= require('../utils/projectionUtil');
-var models= require(require('path').resolve('./advaya')).models();
 
-module.exports= function (model) {
-	model.populate= function (obj,fields) {
+module.exports= function (input) {
+	var model= input.model;
+	var allModels= input.allModels;
+	input.model.populate= function (obj,fields) {
 		if(model.schema.hasOwnProperty('reference') && typeof(model.schema.reference)==="object")
 		{
 			if(!fields || !Array.isArray(fields))
@@ -22,8 +23,12 @@ module.exports= function (model) {
 			});
 			// console.log('\nfilterReference\n',filterReference,model.schema.reference);
 
+			var arrayConverted= false;
 			if(!Array.isArray(obj))
+			{
+				arrayConverted= true;
 				obj=[obj];
+			}
 
 			var allIds= filterReference.map(function (reference) {
 				return {
@@ -38,18 +43,18 @@ module.exports= function (model) {
 			// console.log('\nallIds\n',allIds);
 
 			var allIdsPromise= allIds.map(function (reference) {
-				if(!models[reference.reference].schema.hasOwnProperty('embeded'))
+				if(!allModels[reference.reference].schema.hasOwnProperty('embeded'))
 					return find(
 							reference.reference,
 							{_id:{$in:reference.referenceIds}},
-							projectionUtil(models[reference.reference],{})
+							projectionUtil(allModels[reference.reference],{})
 						).toArray();
 				else
 					return findEmbeded(
 							reference.reference,
 							{_id:{$in:reference.referenceIds}},
-							projectionUtil(models[reference.reference],{}),
-							models[reference.reference].schema.embeded
+							projectionUtil(allModels[reference.reference],{}),
+							allModels[reference.reference].schema.embeded
 						);
 			});
 
@@ -72,7 +77,7 @@ module.exports= function (model) {
 					});
 				});
 
-				if(obj.length==1)
+				if(arrayConverted)
 					obj=obj[0];
 				return obj;
 			});
@@ -87,5 +92,5 @@ module.exports= function (model) {
 		}
 	};
 
-	return model;
+	return input;
 }

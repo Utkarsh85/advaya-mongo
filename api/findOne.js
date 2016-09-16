@@ -1,13 +1,12 @@
-var validate= require(require('path').resolve('./advaya')).validation();
-
 //dbCore
 var findOne= require('../core/findOne');
 var findOneEmbeded= require('../core/findOneEmbeded');
 //Projection utility
 var projectionUtil= require('../utils/projectionUtil');
 
-module.exports= function (model) {
-	model.findOne= function (query,projection) {
+module.exports= function (input) {
+	var model= input.model;
+	input.model.findOne= function (query,projection) {
 		if(!query)
 		{
 			throw 'Query Undefined';
@@ -27,5 +26,5 @@ module.exports= function (model) {
 		}
 	};
 
-	return model;
+	return input;
 }
