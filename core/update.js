@@ -1,8 +1,8 @@
-var db = require( '../db' ).getDb();
 var find= require('./find');
 var queryHelper= require('./utils/queryHelper');
 
 module.exports= function (modelName,selector,obj,findProjection) {
+	var db = require( '../db' ).getDb();
 
 	if(!selector)
 			selector={};

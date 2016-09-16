@@ -1,7 +1,7 @@
-var db = require( '../db' ).getDb();
 var queryHelper= require('./utils/queryHelper');
 
 module.exports= function (model,query,projection,embeded,sort,limit,skip,embededId) {
+	var db = require( '../db' ).getDb();
 
 	return new Promise(function (resolve,reject) {
 

@@ -1,6 +1,6 @@
-var db = require( '../db' ).getDb();
 var queryHelper= require('./utils/queryHelper');
 module.exports= function (modelName,query,projection) {
+	var db = require( '../db' ).getDb();
 	
 	var fullQuery;
 	

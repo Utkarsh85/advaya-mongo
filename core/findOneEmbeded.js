@@ -1,8 +1,8 @@
-var db = require( '../db' ).getDb();
 var queryHelper= require('./utils/queryHelper');
 var merge= require('deepmerge');
 
 module.exports= function (modelName,query,projection,embeded) {
+	var db = require( '../db' ).getDb();
 	
 	var queryObj={};
 	var projectionObj={};

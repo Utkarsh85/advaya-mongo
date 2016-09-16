@@ -1,8 +1,8 @@
-var db = require( '../db' ).getDb();
 var findOneEmbeded= require('./findOneEmbeded');
 var queryHelper= require('./utils/queryHelper');
 
 module.exports= function (modelName,selector,obj,embeded,findProjection) {
+	var db = require( '../db' ).getDb();
 	// console.log('Arguments=',arguments);
 
 	if(!selector)

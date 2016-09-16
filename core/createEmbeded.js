@@ -1,8 +1,8 @@
-var db = require( '../db' ).getDb();
 var findEmbeded= require('./findEmbeded');
 var ObjectID= require('mongodb').ObjectID;
 
 module.exports= function (modelName,obj,embeded,embedParentId) {
+	var db = require( '../db' ).getDb();
 
 	if(!embedParentId)
 	{
