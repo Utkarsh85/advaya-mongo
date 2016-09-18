@@ -31,6 +31,6 @@ module.exports = function (models,validation) {
 	return {
 		api: modelApi,
 		connect: db.connect,
-		initialize: initialize
+		initialize: initialize(models)
 	}
 }
