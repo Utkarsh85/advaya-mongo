@@ -1,3 +1,5 @@
+var ObjectID = require('mongodb').ObjectID;
+
 var db= require('./db');
 var initialize= require('./initialize');
 
@@ -28,6 +30,19 @@ module.exports = function (models,validation) {
 		modelObj[obj.model.modelName]= obj.model;
 		return modelObj;
 	},{});
+
+	//Api static methods
+	modelApi.id2bson = function (id) {
+			return new ObjectID(id);
+	},
+
+	modelApi.generateId = function () {
+		return new ObjectID();
+	},
+
+	modelApi.ObjectID = function () {
+		return ObjectID;
+	},
 
 	return {
 		api: modelApi,
