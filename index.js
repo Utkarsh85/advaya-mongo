@@ -14,6 +14,7 @@ module.exports = function (models,validation) {
 	.map(function (key) {
 		return {model:models[key],validate:validation,allModels:models};
 	})
+	.map(api.modelFunctions)
 	.map(api.find)
 	.map(api.findOne)
 	.map(api.create)
