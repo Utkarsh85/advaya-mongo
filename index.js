@@ -34,15 +34,15 @@ module.exports = function (models,validation) {
 	//Api static methods
 	modelApi.id2bson = function (id) {
 			return new ObjectID(id);
-	},
+	};
 
 	modelApi.generateId = function () {
 		return new ObjectID();
-	},
+	};
 
 	modelApi.ObjectID = function () {
 		return ObjectID;
-	},
+	};
 
 	return {
 		api: modelApi,

@@ -1,4 +1,5 @@
 var ObjectId= require('mongodb').ObjectId;
+var _= require('lodash');
 
 //dbCore
 var find= require('../core/find');
@@ -13,76 +14,78 @@ module.exports= function (input) {
 	input.model.populate= function (obj,fields) {
 		if(model.schema.hasOwnProperty('reference') && typeof(model.schema.reference)==="object")
 		{
-			if(!fields || !Array.isArray(fields))
-				fields=Object.keys(model.schema.reference);
-
-			var filterReference=Object.keys(model.schema.reference)
-			.filter(function (val) {
-				if(fields.indexOf(val)>=0)
-					return true;
-			});
-			// console.log('\nfilterReference\n',filterReference,model.schema.reference);
-
-			var arrayConverted= false;
 			if(!Array.isArray(obj))
 			{
-				arrayConverted= true;
 				obj=[obj];
 			}
 
-			var allIds= filterReference.map(function (reference) {
-				return {
-					referenceField: reference,
-					reference: model.schema.reference[reference],
-					referenceIds: obj.map(function (val) {
-						return new ObjectId(val[reference]);
-					})
-				};
+			// if no fields defined just set it all the fields
+			if(!fields || !Array.isArray(fields))
+				fields=Object.keys(model.schema.reference);
+
+			var allFields=Object.keys(model.schema.reference);
+			var fields=_.difference(allFields,_.difference(allFields,fields));
+
+			var allIds= fields.map(function (field) {
+				return{
+					referenceField: field,
+					reference: model.schema.reference[field].model,
+					referenceIds: _.uniq( obj
+						.filter(x=> {if(x.hasOwnProperty(field)) return true;})
+						.map(x=>x[field])
+						).map( x => new ObjectId(x))
+				}
 			});
 
-			// console.log('\nallIds\n',allIds);
 
-			var allIdsPromise= allIds.map(function (reference) {
-				if(!allModels[reference.reference].schema.hasOwnProperty('embeded'))
+			var allIdsPromise= allIds.map(function (allId) {
+
+				if(!allModels[allId.reference].schema.hasOwnProperty('embeded'))
 					return find(
-							reference.reference,
-							{_id:{$in:reference.referenceIds}},
-							projectionUtil(allModels[reference.reference],{})
+							allId.reference,
+							{_id:{$in:allId.referenceIds}},
+							projectionUtil(allModels[allId.reference],{})
 						).toArray();
 				else
 					return findEmbeded(
-							reference.reference,
-							{_id:{$in:reference.referenceIds}},
-							projectionUtil(allModels[reference.reference],{}),
-							allModels[reference.reference].schema.embeded
+							allId.reference,
+							{_id:{$in:allId.referenceIds}},
+							projectionUtil(allModels[allId.reference],{}),
+							allModels[allId.reference].schema.embeded
 						);
 			});
 
-			return Promise.all(allIdsPromise)
-			.then(function (allFounds) {
-				allIds.forEach(function (reference,allIdsIndex) {
-					foundIds= allFounds[allIdsIndex].map(function(x) { return x._id.toString()});
-					obj.map(function (val) {
-						if(foundIds.indexOf(val[reference.referenceField]) >=0)
-						{
-							index= foundIds.indexOf(val[reference.referenceField]);
-
-							val[reference.referenceField]= allFounds[allIdsIndex][index];
-						}
-						else
-						{
-							val[reference.referenceField]= null;
-						}
-						return val;
+			var PromiseResolved= Promise.all(allIdsPromise)
+			.then(function (allResults) {
+				return allResults.map(function(result){
+					return result.map(function (x) {
+						x._id= x._id.toString();
+						return x;
+					});
+				})
+			})
+			.then(function (allResults) {
+				return allResults.map(function(result){
+					return _.groupBy(result,'_id');
+				})
+			})
+			.then(function (allResults) {
+				// console.log(JSON.stringify(allResults,null,2));
+				var newObj;
+				fields.map(function (field,ind) {
+					newObj= obj.map(function (individual) {
+						if(allResults[ind].hasOwnProperty(individual[field]))
+							individual[field]= allResults[ind][ individual[field] ];
+						else if(typeof(individual[field]) !="undefined" )
+							individual[field]= null;
+						return individual;
 					});
 				});
 
-				if(arrayConverted)
-					obj=obj[0];
-				return obj;
+				return newObj;
 			});
 
-
+			return PromiseResolved;
 		}
 		else
 		{
