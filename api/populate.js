@@ -94,8 +94,10 @@ module.exports= function (input) {
 				var newObj;
 				fields.map(function (field,ind) {
 					newObj= obj.map(function (individual) {
-						if(allResults[ind].hasOwnProperty(individual[field]))
-							individual[field]= allResults[ind][ individual[field] ];
+						if(allResults[ind].hasOwnProperty(individual[field]) && Array.isArray(allResults[ind][ individual[field] ])  &&  allResults[ind][ individual[field] ].length==1)
+						{
+							individual[field]= allResults[ind][ individual[field] ][0]; //only the first element because _id is unique
+						}
 						else if(typeof(individual[field]) !="undefined" )
 							individual[field]= null;
 						return individual;
