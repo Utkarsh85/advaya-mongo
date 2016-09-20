@@ -11,7 +11,7 @@ var projectionUtil= require('../utils/projectionUtil');
 module.exports= function (input) {
 	var model= input.model;
 	var allModels= input.allModels;
-	input.model.populate= function (obj,fields) {
+	input.model.populate= function (obj,fields,options) {
 		if(model.schema.hasOwnProperty('reference') && typeof(model.schema.reference)==="object")
 		{
 			if(!Array.isArray(obj))
@@ -63,6 +63,24 @@ module.exports= function (input) {
 						return x;
 					});
 				})
+			})
+			.then(function (allResults) {
+				if(options && options.hasOwnProperty('toJSON'))
+				{
+					allIds.map(function (allId,index) {
+						var toJSON= allModels[allId.reference].schema.toJSON;
+						if(toJSON && typeof(toJSON)==="function")
+						{
+							allResults[index]=allResults[index].map(function (allResult) {
+								allResult=toJSON(allResult);
+								return allResult;
+							});
+						}
+					});
+					return allResults;
+				}
+				else
+					return allResults;
 			})
 			.then(function (allResults) {
 				return allResults.map(function(result){
