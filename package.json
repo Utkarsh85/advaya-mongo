@@ -1,6 +1,6 @@
 {
   "name": "advaya-mongo",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Advaya mongo plugin",
   "main": "index.js",
   "scripts": {
