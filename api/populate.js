@@ -14,8 +14,10 @@ module.exports= function (input) {
 	input.model.populate= function (obj,fields,options) {
 		if(model.schema.hasOwnProperty('reference') && typeof(model.schema.reference)==="object")
 		{
+			var wasAnObject;
 			if(!Array.isArray(obj))
 			{
+				wasAnObject= true;
 				obj=[obj];
 			}
 
@@ -100,7 +102,10 @@ module.exports= function (input) {
 					});
 				});
 
-				return newObj;
+				if(wasAnObject)
+					return newObj[0];
+				else
+					return newObj;
 			});
 
 			return PromiseResolved;
