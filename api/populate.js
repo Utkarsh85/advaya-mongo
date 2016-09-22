@@ -73,10 +73,7 @@ module.exports= function (input) {
 						var toJSON= allModels[allId.reference].schema.toJSON;
 						if(toJSON && typeof(toJSON)==="function")
 						{
-							allResults[index]=allResults[index].map(function (allResult) {
-								allResult=toJSON(allResult);
-								return allResult;
-							});
+							allResults[index]=allResults[index].map(toJSON);
 						}
 					});
 					return allResults;
@@ -104,6 +101,10 @@ module.exports= function (input) {
 					});
 				});
 
+				// if toJSON is defined in model, than apply that, also check the options variable
+				if(options && options.hasOwnProperty('toJSON') && model.schema.hasOwnProperty('toJSON'))
+					newObj= newObj.map(model.schema.toJSON);
+				
 				if(wasAnObject)
 					return newObj[0];
 				else

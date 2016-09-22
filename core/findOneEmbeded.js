@@ -16,6 +16,7 @@ module.exports= function (modelName,query,projection,embeded) {
 	queryObj[modelName]={ "$elemMatch" : queryHelper._id(query) };
 	projectionObj[modelName]={ "$elemMatch" : queryHelper._id(query) };
 	projectionObj= merge(queryHelper.project_dot_id(projection,modelName),projectionObj);
+
 	
 	return new Promise(function (resolve,reject) {
 		db.collection( embeded ).find(queryObj,projectionObj).limit(1).toArray(function (err,docs) {

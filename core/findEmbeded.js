@@ -33,7 +33,7 @@ module.exports= function (model,query,projection,embeded,sort,limit,skip,embeded
 		var additionalParams=[];
 		if(sort && typeof(sort)==="object")
 		{
-			additionalParams.push({"$sort" : queryHelper.dot_id(sort,model)});
+			additionalParams.push({"$sort" : queryHelper.project_dot_id(sort,model)});
 		}
 
 		if(skip && !isNaN(parseInt(skip)) && parseInt(skip) >=0)

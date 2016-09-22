@@ -26,5 +26,9 @@
     "lodash": "^4.16.0",
     "mongodb": "^2.2.10",
     "require-all": "^2.0.0"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "mocha": "^3.0.2"
   }
 }
