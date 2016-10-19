@@ -37,7 +37,7 @@ findEmbededApi.prototype.embededId = function(id) {
 };
 
 findEmbededApi.prototype.toArray = function() {
-	return findEmbeded(this.modelName,this.query,this.projection,this.embeded,this.sortVal,this.skipVal);
+	return findEmbeded(this.modelName,this.query,this.projection,this.embeded,this.sortVal,this.limitVal,this.skipVal,this.embededParentId);
 };
 
 module.exports=findEmbededApi;
